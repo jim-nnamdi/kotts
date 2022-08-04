@@ -5,6 +5,7 @@ import (
 
 	"github.com/jim-nnamdi/kotts/internal/database"
 	"go.uber.org/zap"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var (
@@ -13,6 +14,22 @@ var (
 	db               = database.NewDatabaseHandler(logger)
 	conn             = db.Databaseconn()
 )
+
+func GenerateFromPassword(password string, cost int) ([]byte, error) {
+	hashed_password, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	if err != nil {
+		return nil, err
+	}
+	return hashed_password, nil
+}
+
+func CompareAndHashPassword(password string, hash []byte) (bool, error) {
+	convert_hash_to_pwd := bcrypt.CompareHashAndPassword(hash, []byte(password))
+	if convert_hash_to_pwd != nil {
+		return false, errors.New(convert_hash_to_pwd.Error())
+	}
+	return true, nil
+}
 
 func (usermodel *User) AddNew(username string, email string, password string, country string, active int) (bool, error) {
 	res, err := conn.Prepare("insert into users (username,password, country, email, active) values(?,?,?,?,?)")
