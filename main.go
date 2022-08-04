@@ -1,17 +1,17 @@
 package main
 
 import (
-	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/jim-nnamdi/kotts/internal/user"
 )
 
+func userreg(w http.ResponseWriter, r *http.Request) {
+	user.RegistrationService(w, r)
+}
 func main() {
-	newuser := user.User{}
-	x, err := newuser.UserRegistration("jim", "j@gmail.com", "123", "nga", 0)
-	if !x {
-		log.Print(err)
-	}
-	fmt.Print("process completed ...")
+	log.Print("server started running at port 4500 ....")
+	http.HandleFunc("/user", userreg)
+	log.Fatal(http.ListenAndServe(":4500", nil))
 }
