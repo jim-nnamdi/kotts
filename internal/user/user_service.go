@@ -10,6 +10,11 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
+var (
+	jwt_secret_key = []byte("kotts_secret_key")
+	user           = User{}
+)
+
 func RegistrationService(w http.ResponseWriter, r *http.Request) {
 	var (
 		username = r.FormValue("username")
@@ -17,7 +22,6 @@ func RegistrationService(w http.ResponseWriter, r *http.Request) {
 		password = r.FormValue("password")
 		country  = r.FormValue("country")
 		active   = r.FormValue("active")
-		user     = User{}
 	)
 	active_user_value, _ := strconv.Atoi(active)
 	parse_form_for_registration, err := user.UserRegistration(username, email, password, country, active_user_value)
@@ -33,7 +37,6 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 	var (
 		email    = r.FormValue("email")
 		password = r.FormValue("password")
-		user     = User{}
 	)
 	parse_form_to_login_user, err := user.UserLogin(email, password)
 	log.Print(parse_form_to_login_user)
@@ -45,13 +48,7 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 		log.Printf("login unsuccessful: %s", err)
 		return
 	}
-	type DataToEncode struct {
-		Password string `json:"password"`
-		Email    string `json:"email"`
-		jwt.StandardClaims
-	}
 	expiration_date := time.Now().Add(5 * time.Minute)
-	jwt_secret_key := []byte("kotts_secret_key")
 	parse_encoding_data := DataToEncode{
 		Password: password,
 		Email:    email,

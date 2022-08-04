@@ -1,6 +1,9 @@
 package user
 
-import "go.uber.org/zap"
+import (
+	"github.com/golang-jwt/jwt"
+	"go.uber.org/zap"
+)
 
 type User struct {
 	ID       int    `json:"id"`
@@ -10,6 +13,12 @@ type User struct {
 	Country  string `json:"country"`
 	Active   int    `json:"active"`
 	Logger   *zap.Logger
+}
+
+type DataToEncode struct {
+	Password string `json:"password"`
+	Email    string `json:"email"`
+	jwt.StandardClaims
 }
 
 type Userinterface interface {
