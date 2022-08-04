@@ -67,7 +67,7 @@ func (handler *databaseHandler) GetUserByEmail(email string) bool {
 	return true
 }
 
-func (handler *databaseHandler) GetByUsernameAndPassword(email string, password string) bool {
+func (handler *databaseHandler) GetByUsernameAndPassword(email string, password string) *models.User {
 	var (
 		user_response = &models.User{}
 		err           error
@@ -81,9 +81,9 @@ func (handler *databaseHandler) GetByUsernameAndPassword(email string, password 
 		&user_response.Email,
 		&user_response.Active,
 	); err != nil {
-		return false
+		return nil
 	}
-	return true
+	return user_response
 }
 
 func (handler *databaseHandler) GetUserHash(email string) []byte {

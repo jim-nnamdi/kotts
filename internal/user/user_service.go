@@ -1,6 +1,7 @@
 package user
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"strconv"
@@ -23,4 +24,18 @@ func RegistrationService(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.Write([]byte(username + " Registration successful!"))
 	}
+}
+
+func LoginService(w http.ResponseWriter, r *http.Request) {
+	var (
+		email    = r.FormValue("email")
+		password = r.FormValue("password")
+		user     = User{}
+	)
+	parse_form_to_login_user, err := user.UserLogin(email, password)
+	if err != nil {
+		log.Printf("login unsuccessful: %s", err)
+		return
+	}
+	json.NewEncoder(w).Encode(parse_form_to_login_user)
 }

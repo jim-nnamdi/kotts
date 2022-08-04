@@ -70,15 +70,12 @@ func (usermodel *User) UserRegistration(username string, email string, password 
 	return true, nil
 }
 
-func (usermodel *User) UserLogin(email string, password string) (bool, error) {
+func (usermodel *User) UserLogin(email string, password string) (*User, error) {
 	get_user_hash := db.GetUserHash(email)
-	compare_hash_password, _ := CompareAndHashPassword(password, get_user_hash)
-	if compare_hash_password {
-		validate_user_login := db.GetByUsernameAndPassword(email, password)
-		if validate_user_login {
-			return true, nil
-		}
-		return false, errors.New("wrong login details, please try again")
+	validate_user_login := db.GetByUsernameAndPassword(email, password)
+	compare_hash_password, _ := CompareAndHashPassword(validate_user_login.Password, get_user_hash)
+	if !compare_hash_password {
+		return nil, errors.New("wrong login details, please try again")
 	}
-	return false, errors.New("wrong login details, please try again")
+	return usermodel, nil
 }
