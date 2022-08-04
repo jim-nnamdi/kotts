@@ -1,7 +1,11 @@
 package database
 
-import "io"
+import (
+	"database/sql"
+	"io"
+)
 
 type Client interface {
 	io.Closer
+	Databaseconn() (db *sql.DB)
 }
