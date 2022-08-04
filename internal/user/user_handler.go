@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/jim-nnamdi/kotts/internal/database"
+	"github.com/jim-nnamdi/kotts/internal/models"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -16,20 +17,12 @@ var (
 	conn             = db.Databaseconn()
 )
 
-var _ Userinterface = &User{}
+var _ Userinterface = &models.User{}
 
-type User struct {
-	ID       int    `json:"id"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
-	Country  string `json:"country"`
-	Active   int    `json:"active"`
-	Logger   *zap.Logger
-}
+type userdata models.User
 
-func NewUser(username string, password string, email string, country string, active int) *User {
-	return &User{
+func NewUser(username string, password string, email string, country string, active int) *models.User {
+	return &models.User{
 		Username: username,
 		Password: password,
 		Email:    email,
@@ -54,7 +47,7 @@ func CompareAndHashPassword(password string, hash []byte) (bool, error) {
 	return true, nil
 }
 
-func (usermodel *User) UserRegistration(username string, email string, password string, country string, active int) (bool, error) {
+func (usermodel *userdata) UserRegistration(username string, email string, password string, country string, active int) (bool, error) {
 	res, err := conn.Prepare("insert into users (username,password, country, email, active) values(?,?,?,?,?)")
 	if err != nil {
 		usermodel.Logger.Debug("could not run add user query successfully", zap.Error(err))
