@@ -36,12 +36,14 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 		user     = User{}
 	)
 	parse_form_to_login_user, err := user.UserLogin(email, password)
+	if parse_form_to_login_user == nil {
+		log.Print("userservice : error logging in")
+		return
+	}
 	if err != nil {
 		log.Printf("login unsuccessful: %s", err)
 		return
 	}
-	json.NewEncoder(w).Encode(parse_form_to_login_user)
-
 	type DataToEncode struct {
 		Username string `json:"username"`
 		Email    string `json:"email"`
@@ -57,7 +59,7 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 			IssuedAt:  time.Now().Unix(),
 		},
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodRS256, parse_encoding_data)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, parse_encoding_data)
 	token_string, err := token.SignedString(jwt_secret_key)
 	if err != nil {
 		log.Print(err.Error())
@@ -68,4 +70,5 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 		Value:   token_string,
 		Expires: expiration_date,
 	})
+	json.NewEncoder(w).Encode(token_string)
 }

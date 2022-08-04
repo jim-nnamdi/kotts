@@ -13,5 +13,5 @@ type Client interface {
 	GetUserByUsername(username string) bool
 	GetUserByEmail(email string) bool
 	GetUserHash(email string) []byte
-	GetByUsernameAndPassword(email string, password string) *models.User
+	GetByUsernameAndPassword(email string, password string) (*models.User, error)
 }

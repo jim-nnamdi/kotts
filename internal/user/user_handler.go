@@ -2,6 +2,7 @@ package user
 
 import (
 	"errors"
+	"log"
 
 	"github.com/jim-nnamdi/kotts/internal/database"
 	"go.uber.org/zap"
@@ -72,10 +73,14 @@ func (usermodel *User) UserRegistration(username string, email string, password 
 
 func (usermodel *User) UserLogin(email string, password string) (*User, error) {
 	get_user_hash := db.GetUserHash(email)
-	validate_user_login := db.GetByUsernameAndPassword(email, password)
-	compare_hash_password, _ := CompareAndHashPassword(validate_user_login.Password, get_user_hash)
-	if !compare_hash_password {
-		return nil, errors.New("wrong login details, please try again")
+	compare_hash_password, _ := CompareAndHashPassword(password, get_user_hash)
+	if compare_hash_password {
+		validate_user_login, err := db.GetByUsernameAndPassword(email, string(get_user_hash))
+		if validate_user_login == nil {
+			log.Print("userhandler : error logging in", err.Error())
+			return nil, errors.New("login failed: could not get user details")
+		}
+		return usermodel, nil
 	}
-	return usermodel, nil
+	return nil, errors.New("error logging user in")
 }
