@@ -71,16 +71,16 @@ func (usermodel *User) UserRegistration(username string, email string, password 
 	return true, nil
 }
 
-func (usermodel *User) UserLogin(email string, password string) (*User, error) {
+func (usermodel *User) UserLogin(email string, password string) (bool, error) {
 	get_user_hash := db.GetUserHash(email)
 	compare_hash_password, _ := CompareAndHashPassword(password, get_user_hash)
 	if compare_hash_password {
 		validate_user_login, err := db.GetByUsernameAndPassword(email, string(get_user_hash))
 		if validate_user_login == nil {
 			log.Print("userhandler : error logging in", err.Error())
-			return nil, errors.New("login failed: could not get user details")
+			return false, errors.New("login failed: could not get user details")
 		}
-		return usermodel, nil
+		return true, nil
 	}
-	return nil, errors.New("error logging user in")
+	return false, errors.New("error logging user in")
 }

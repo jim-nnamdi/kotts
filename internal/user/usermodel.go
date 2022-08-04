@@ -14,5 +14,5 @@ type User struct {
 
 type Userinterface interface {
 	UserRegistration(username string, email string, password string, country string, active int) (bool, error)
-	UserLogin(email string, password string) (*User, error)
+	UserLogin(email string, password string) (bool, error)
 }

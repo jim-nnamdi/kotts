@@ -36,7 +36,8 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 		user     = User{}
 	)
 	parse_form_to_login_user, err := user.UserLogin(email, password)
-	if parse_form_to_login_user == nil {
+	log.Print(parse_form_to_login_user)
+	if !parse_form_to_login_user {
 		log.Print("userservice : error logging in")
 		return
 	}
@@ -45,15 +46,15 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	type DataToEncode struct {
-		Username string `json:"username"`
+		Password string `json:"password"`
 		Email    string `json:"email"`
 		jwt.StandardClaims
 	}
 	expiration_date := time.Now().Add(5 * time.Minute)
 	jwt_secret_key := []byte("kotts_secret_key")
 	parse_encoding_data := DataToEncode{
-		Username: parse_form_to_login_user.Username,
-		Email:    parse_form_to_login_user.Email,
+		Password: password,
+		Email:    email,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expiration_date.Unix(),
 			IssuedAt:  time.Now().Unix(),
