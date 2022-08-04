@@ -3,7 +3,6 @@ package user
 import (
 	"log"
 	"net/http"
-	"reflect"
 	"strconv"
 )
 
@@ -18,9 +17,10 @@ func RegistrationService(w http.ResponseWriter, r *http.Request) {
 	)
 	active_user_value, _ := strconv.Atoi(active)
 	parse_form_for_registration, err := user.UserRegistration(username, email, password, country, active_user_value)
-	if reflect.DeepEqual(parse_form_for_registration, User{}) {
+	if !parse_form_for_registration {
 		log.Printf("Registration unsuccessful : %s", err)
 		return
+	} else {
+		w.Write([]byte("Registration successful! login now"))
 	}
-	w.Write([]byte(err.Error()))
 }
