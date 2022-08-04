@@ -1,7 +1,9 @@
 package database
 
 import (
+	"context"
 	"database/sql"
+	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 	"go.uber.org/zap"
@@ -26,6 +28,17 @@ func (handler *databaseHandler) Databaseconn() (db *sql.DB) {
 		return
 	}
 	return db
+}
+
+func (handler *databaseHandler) GetUserByUsername(ctx context.Context, username string) bool {
+	get_user_by_username := fmt.Sprintf("select * from users where username = %s", username)
+	run_getsingleuser_query := handler.Databaseconn().QueryRow(get_user_by_username)
+	// var user_reference handler.userClient
+	if err := run_getsingleuser_query.Scan(&username); err != nil {
+		handler.logger.Debug("could not find user with username")
+		return false
+	}
+	return true
 }
 
 func (handler *databaseHandler) Close() error {

@@ -8,6 +8,6 @@ import (
 
 func main() {
 	newuser := &user.User{}
-	new_user_info, _ := newuser.AddNew("jim", "jim@gmail.com", "123456", "Nigeria", 1)
+	new_user_info, _ := newuser.UserRegistration("jim", "jim@gmail.com", "123456", "Nigeria", 1)
 	fmt.Print(new_user_info)
 }

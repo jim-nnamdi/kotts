@@ -1,6 +1,7 @@
 package user
 
 import (
+	"context"
 	"errors"
 
 	"github.com/jim-nnamdi/kotts/internal/database"
@@ -14,6 +15,28 @@ var (
 	db               = database.NewDatabaseHandler(logger)
 	conn             = db.Databaseconn()
 )
+
+var _ Userinterface = &User{}
+
+type User struct {
+	ID       int    `json:"id"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+	Country  string `json:"country"`
+	Active   int    `json:"active"`
+	Logger   *zap.Logger
+}
+
+func NewUser(username string, password string, email string, country string, active int) *User {
+	return &User{
+		Username: username,
+		Password: password,
+		Email:    email,
+		Country:  country,
+		Active:   active,
+	}
+}
 
 func GenerateFromPassword(password string, cost int) ([]byte, error) {
 	hashed_password, err := bcrypt.GenerateFromPassword([]byte(password), cost)
@@ -31,13 +54,18 @@ func CompareAndHashPassword(password string, hash []byte) (bool, error) {
 	return true, nil
 }
 
-func (usermodel *User) AddNew(username string, email string, password string, country string, active int) (bool, error) {
+func (usermodel *User) UserRegistration(username string, email string, password string, country string, active int) (bool, error) {
 	res, err := conn.Prepare("insert into users (username,password, country, email, active) values(?,?,?,?,?)")
 	if err != nil {
 		usermodel.Logger.Debug("could not run add user query successfully", zap.Error(err))
 		return false, errors.New(err.Error())
 	}
 	hash_user_password, _ := GenerateFromPassword(password, 14)
+	check_if_username_exists := db.GetUserByUsername(context.Background(), username)
+	if !check_if_username_exists {
+		usermodel.Logger.Debug("could not create account because username already exists")
+		return false, errors.New("user with username already exists")
+	}
 	result_from_user_registration, err := res.Exec(username, hash_user_password, country, email, active)
 	if err != nil {
 		usermodel.Logger.Debug("could not execute and insert user into database" + err.Error())
@@ -49,3 +77,7 @@ func (usermodel *User) AddNew(username string, email string, password string, co
 	}
 	return true, nil
 }
+
+// func (usermodel *User) UserLogin(username string, password string) bool {
+
+// }
