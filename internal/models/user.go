@@ -11,3 +11,7 @@ type User struct {
 	Active   int    `json:"active"`
 	Logger   *zap.Logger
 }
+
+type Userinterface interface {
+	UserRegistration(username string, email string, password string, country string, active int) (bool, error)
+}

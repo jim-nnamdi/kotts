@@ -2,12 +2,16 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/jim-nnamdi/kotts/internal/user"
 )
 
 func main() {
-	newuser := &user.User{}
-	new_user_info, _ := newuser.UserRegistration("jim", "jim@gmail.com", "123456", "Nigeria", 1)
-	fmt.Print(new_user_info)
+	newuser := user.User{}
+	x, err := newuser.UserRegistration("jim", "j@gmail.com", "123", "nga", 0)
+	if !x {
+		log.Print(err)
+	}
+	fmt.Print("User registered successfully ...")
 }
