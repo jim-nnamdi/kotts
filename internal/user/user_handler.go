@@ -51,8 +51,12 @@ func (usermodel *User) UserRegistration(username string, email string, password 
 	}
 	hash_user_password, _ := GenerateFromPassword(password, 14)
 	check_if_username_exists := db.GetUserByUsername(username)
+	check_if_email_exists := db.GetUserByEmail(email)
 	if check_if_username_exists {
 		return false, errors.New("user with username already exists")
+	}
+	if check_if_email_exists {
+		return false, errors.New("user with email already exists")
 	}
 	result_from_user_registration, err := res.Exec(username, hash_user_password, country, email, active)
 	if err != nil {
