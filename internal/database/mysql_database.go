@@ -1,9 +1,7 @@
 package database
 
 import (
-	"context"
 	"database/sql"
-	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jim-nnamdi/kotts/internal/models"
@@ -31,13 +29,12 @@ func (handler *databaseHandler) Databaseconn() (db *sql.DB) {
 	return db
 }
 
-func (handler *databaseHandler) GetUserByUsername(ctx context.Context, username string) bool {
+func (handler *databaseHandler) GetUserByUsername(username string) bool {
 	var (
 		user_response = &models.User{}
 		err           error
 	)
-	get_user_by_username := fmt.Sprintf("select * from users where username = %s", username)
-	run_getsingleuser_query := handler.Databaseconn().QueryRow(get_user_by_username)
+	run_getsingleuser_query := handler.Databaseconn().QueryRow("select * from users where username = ?", username)
 	if err = run_getsingleuser_query.Scan(
 		&user_response.ID,
 		&user_response.Username,
@@ -46,7 +43,25 @@ func (handler *databaseHandler) GetUserByUsername(ctx context.Context, username 
 		&user_response.Email,
 		&user_response.Active,
 	); err != nil {
-		handler.logger.Debug("could not find user with username")
+		return false
+	}
+	return true
+}
+
+func (handler *databaseHandler) GetUserByEmail(email string) bool {
+	var (
+		user_response = &models.User{}
+		err           error
+	)
+	run_getsingleuser_query := handler.Databaseconn().QueryRow("select * from users where email = ?", email)
+	if err = run_getsingleuser_query.Scan(
+		&user_response.ID,
+		&user_response.Username,
+		&user_response.Password,
+		&user_response.Country,
+		&user_response.Email,
+		&user_response.Active,
+	); err != nil {
 		return false
 	}
 	return true

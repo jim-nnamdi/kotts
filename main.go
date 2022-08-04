@@ -13,5 +13,5 @@ func main() {
 	if !x {
 		log.Print(err)
 	}
-	fmt.Print("User registered successfully ...")
+	fmt.Print("process completed ...")
 }

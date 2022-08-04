@@ -1,7 +1,6 @@
 package user
 
 import (
-	"context"
 	"errors"
 
 	"github.com/jim-nnamdi/kotts/internal/database"
@@ -51,9 +50,8 @@ func (usermodel *User) UserRegistration(username string, email string, password 
 		return false, errors.New(err.Error())
 	}
 	hash_user_password, _ := GenerateFromPassword(password, 14)
-	check_if_username_exists := db.GetUserByUsername(context.Background(), username)
-	if !check_if_username_exists {
-		usermodel.Logger.Debug("could not create account because username already exists")
+	check_if_username_exists := db.GetUserByUsername(username)
+	if check_if_username_exists {
 		return false, errors.New("user with username already exists")
 	}
 	result_from_user_registration, err := res.Exec(username, hash_user_password, country, email, active)

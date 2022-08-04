@@ -1,7 +1,6 @@
 package database
 
 import (
-	"context"
 	"database/sql"
 	"io"
 )
@@ -9,5 +8,6 @@ import (
 type Client interface {
 	io.Closer
 	Databaseconn() (db *sql.DB)
-	GetUserByUsername(ctx context.Context, username string) bool
+	GetUserByUsername(username string) bool
+	GetUserByEmail(email string) bool
 }
