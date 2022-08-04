@@ -16,7 +16,7 @@ var (
 )
 
 func GenerateFromPassword(password string, cost int) ([]byte, error) {
-	hashed_password, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	hashed_password, err := bcrypt.GenerateFromPassword([]byte(password), cost)
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +37,8 @@ func (usermodel *User) AddNew(username string, email string, password string, co
 		usermodel.Logger.Debug("could not run add user query successfully", zap.Error(err))
 		return false, errors.New(err.Error())
 	}
-	result_from_user_registration, err := res.Exec(username, password, country, email, active)
+	hash_user_password, _ := GenerateFromPassword(password, 14)
+	result_from_user_registration, err := res.Exec(username, hash_user_password, country, email, active)
 	if err != nil {
 		usermodel.Logger.Debug("could not execute and insert user into database" + err.Error())
 		return false, err
