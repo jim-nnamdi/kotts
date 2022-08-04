@@ -10,4 +10,6 @@ type Client interface {
 	Databaseconn() (db *sql.DB)
 	GetUserByUsername(username string) bool
 	GetUserByEmail(email string) bool
+	GetUserHash(email string) []byte
+	GetByUsernameAndPassword(email string, password string) bool
 }

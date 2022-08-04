@@ -67,6 +67,43 @@ func (handler *databaseHandler) GetUserByEmail(email string) bool {
 	return true
 }
 
+func (handler *databaseHandler) GetByUsernameAndPassword(email string, password string) bool {
+	var (
+		user_response = &models.User{}
+		err           error
+	)
+	run_getsingleuser_query := handler.Databaseconn().QueryRow("select * from users where email = ? password = ?", email, password)
+	if err = run_getsingleuser_query.Scan(
+		&user_response.ID,
+		&user_response.Username,
+		&user_response.Password,
+		&user_response.Country,
+		&user_response.Email,
+		&user_response.Active,
+	); err != nil {
+		return false
+	}
+	return true
+}
+
+func (handler *databaseHandler) GetUserHash(email string) []byte {
+	var (
+		user_response = &models.User{}
+		err           error
+	)
+	run_getsingleuser_query := handler.Databaseconn().QueryRow("select * from users where email = ?", email)
+	if err = run_getsingleuser_query.Scan(
+		&user_response.ID,
+		&user_response.Username,
+		&user_response.Password,
+		&user_response.Country,
+		&user_response.Email,
+		&user_response.Active,
+	); err != nil {
+		return nil
+	}
+	return []byte(user_response.Password)
+}
 func (handler *databaseHandler) Close() error {
 	return nil
 }
