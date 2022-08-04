@@ -7,6 +7,8 @@ import (
 	"go.uber.org/zap"
 )
 
+var _ Client = &databaseHandler{}
+
 type databaseHandler struct {
 	logger *zap.Logger
 }
@@ -24,4 +26,8 @@ func (handler *databaseHandler) Databaseconn() (db *sql.DB) {
 		return
 	}
 	return db
+}
+
+func (handler *databaseHandler) Close() error {
+	return nil
 }
