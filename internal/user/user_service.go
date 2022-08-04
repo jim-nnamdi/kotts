@@ -21,6 +21,6 @@ func RegistrationService(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Registration unsuccessful : %s", err)
 		return
 	} else {
-		w.Write([]byte("Registration successful! login now"))
+		w.Write([]byte(username + " Registration successful!"))
 	}
 }
