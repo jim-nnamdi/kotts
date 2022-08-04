@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -41,7 +40,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		w.Write([]byte(fmt.Sprintf("Welcome %s!", claims.Email)))
+		next.ServeHTTP(w, r)
 	})
 }
 
@@ -96,5 +95,6 @@ func RefreshMiddleware(next http.Handler) http.Handler {
 			Value:   token_gen,
 			Expires: expirationTime,
 		})
+		next.ServeHTTP(w, r)
 	})
 }
