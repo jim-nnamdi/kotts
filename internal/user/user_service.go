@@ -29,6 +29,7 @@ func RegistrationService(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Registration unsuccessful : %s", err)
 		return
 	} else {
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(username + " Registration successful!")
 	}
 }
@@ -48,7 +49,7 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 		log.Printf("login unsuccessful: %s", err)
 		return
 	}
-	expiration_date := time.Now().Add(5 * time.Minute)
+	expiration_date := time.Now().Add(60 * time.Minute)
 	parse_encoding_data := DataToEncode{
 		Password: password,
 		Email:    email,
@@ -68,6 +69,6 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 		Value:   token_string,
 		Expires: expiration_date,
 	})
-
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(token_string)
 }
