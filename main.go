@@ -3,7 +3,9 @@ package main
 import (
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/jim-nnamdi/kotts/internal/user"
 )
 
@@ -15,7 +17,16 @@ func userlogin(w http.ResponseWriter, r *http.Request) {
 }
 func main() {
 	log.Print("server started running at port 4500 ....")
-	http.HandleFunc("/register", userreg)
-	http.HandleFunc("/login", userlogin)
-	log.Fatal(http.ListenAndServe(":4500", nil))
+	r := mux.NewRouter()
+	r.HandleFunc("/register", userreg)
+	r.HandleFunc("/login", userlogin)
+	srv := &http.Server{
+		Handler: r,
+		Addr:    "127.0.0.1:4500",
+
+		//enforce timeouts for servers you create!
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
+	log.Fatal(srv.ListenAndServe())
 }

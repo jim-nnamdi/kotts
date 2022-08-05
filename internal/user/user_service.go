@@ -68,5 +68,6 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 		Value:   token_string,
 		Expires: expiration_date,
 	})
+
 	json.NewEncoder(w).Encode(token_string)
 }
