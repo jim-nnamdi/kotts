@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -14,14 +15,20 @@ func userreg(w http.ResponseWriter, r *http.Request) {
 func userlogin(w http.ResponseWriter, r *http.Request) {
 	user.LoginService(w, r)
 }
+
+func testdocker(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode("Hello world")
+}
 func main() {
-	log.Print("server started running at port 7800 ....")
+	log.Print("server started running at port 8080 ....")
 	r := mux.NewRouter()
+	r.HandleFunc("/", testdocker)
 	r.HandleFunc("/register", userreg)
 	r.HandleFunc("/login", userlogin)
 	srv := &http.Server{
 		Handler: r,
-		Addr:    "127.0.0.1:7800",
+		Addr:    "0.0.0.0:8080",
 	}
 	log.Fatal(srv.ListenAndServe())
 }
