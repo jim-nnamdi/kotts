@@ -1,17 +1,11 @@
-FROM golang:1.16-alpine
+FROM golang:1.16-alpine 
 
-WORKDIR /app
+WORKDIR /app 
 
-ADD . /app
+ADD . /app/   
 
-RUN CGO_ENABLED=1 
+RUN CGO_ENABLED=1 GOOS=linux go mod download
 
-RUN GOOS= linux 
+RUN go build -o main . 
 
-RUN go mod download 
-
-RUN go mod tidy 
-
-RUN go run -o main.go 
-
-CMD [ "app", "main" ]
+CMD [ "/app/main" ]
