@@ -1,14 +1,39 @@
 version: '3.8'
 
 services:
+  db: 
+    container_name: "kotts_database"
+    image: mysql:8
+    ports:
+    - "3306:3306"
+    environment:
+      MYSQL_HOST: "mysql"
+      MYSQL_DATABASE: "kotts"
+      MYSQL_ROOT_PASSWORD: "M@etroboomin50"
+    restart: always
+    volumes:
+      - /vol/kbd:/var/lib/mysql
+    networks:
+      - kotts_default
+
   api:
     container_name: "kotts_backend"
     build:
       context: .
       dockerfile: Dockerfile
+    depends_on:
+      - db
     volumes:
-      - ./:/app/
+      - /vol/kbe:/app/
     ports:
       - "8080:8080"
+    networks:
+      - kotts_default
+
+
 networks:
-  default:
+  kotts_default:
+
+volumes:
+  kbd:
+  kbe:
