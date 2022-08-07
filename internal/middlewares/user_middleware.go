@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"time"
 
@@ -19,7 +18,8 @@ func BearerMiddleware(next http.Handler) http.Handler {
 		get_authorization_token := r.Header.Get("Authorization")
 		if get_authorization_token == "" {
 			w.WriteHeader(http.StatusUnauthorized)
-			json.NewEncoder(w).Encode("No token found")
+			w.Header().Add("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(`{"data": {"success":false, "error": "invalid or no token"}}`)
 			return
 		}
 
@@ -46,40 +46,35 @@ func BearerMiddleware(next http.Handler) http.Handler {
 
 func Jwtmiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		c, err := r.Cookie("user_token")
 		if err != nil {
 			if err == http.ErrNoCookie {
-				w.Header().Add("Content-Type", "application/json")
 				w.WriteHeader(http.StatusUnauthorized)
-				json.NewEncoder(w).Encode("Please login into your account!")
+				return
 			}
 			w.WriteHeader(http.StatusBadRequest)
-			log.Print(err)
+			return
 		}
-		token_string := c.Value
+
+		tknStr := c.Value
 		claims := &user.DataToEncode{}
-		token_gen, err := jwt.ParseWithClaims(token_string, claims, func(t *jwt.Token) (interface{}, error) {
+
+		tkn, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
 			return jwt_key, nil
 		})
 		if err != nil {
 			if err == jwt.ErrSignatureInvalid {
 				w.WriteHeader(http.StatusUnauthorized)
-				w.Header().Add("Content-Type", "application/json")
-				json.NewEncoder(w).Encode("Please login again, token expired..")
 				return
 			}
 			w.WriteHeader(http.StatusBadRequest)
-			w.Header().Add("Content-Type", "application/json")
-			json.NewEncoder(w).Encode("Please login again, token expired..")
 			return
 		}
-		if !token_gen.Valid {
+		if !tkn.Valid {
 			w.WriteHeader(http.StatusUnauthorized)
-			w.Header().Add("Content-Type", "application/json")
-			json.NewEncoder(w).Encode("Please login again, token expired..")
 			return
 		}
+		w.Header().Add("Content-Type", "application/json")
 		next.ServeHTTP(w, r)
 	})
 }

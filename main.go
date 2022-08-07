@@ -26,7 +26,7 @@ func main() {
 	testHandler := http.HandlerFunc(testdocker)
 	userloginHandler := http.HandlerFunc(userlogin)
 	userRegisterHandler := http.HandlerFunc(userreg)
-	r.Handle("/test", middlewares.BearerMiddleware(testHandler))
+	r.Handle("/test", middlewares.Jwtmiddleware(testHandler))
 	r.Handle("/login", userloginHandler)
 	r.Handle("/register", userRegisterHandler)
 	log.Print("listening on port 8080 ...")

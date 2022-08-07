@@ -16,4 +16,10 @@ remove_container:
 remove_image:
 	docker rmi kotts_api
 
-.PHONY: first_step second_step install_SQL fourth_step remove_container remove_image
+check_container_logs:
+	docker logs kottsapi
+
+cls: 
+	clear
+
+.PHONY: first_step second_step install_SQL fourth_step remove_container remove_image check_container_logs cls
