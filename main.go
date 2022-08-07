@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/jim-nnamdi/kotts/internal/middlewares"
 	"github.com/jim-nnamdi/kotts/internal/user"
 )
 
@@ -22,13 +22,14 @@ func testdocker(w http.ResponseWriter, r *http.Request) {
 }
 func main() {
 	log.Print("server started running at port 8080 ....")
-	r := mux.NewRouter()
-	r.HandleFunc("/", testdocker)
-	r.HandleFunc("/register", userreg)
-	r.HandleFunc("/login", userlogin)
-	srv := &http.Server{
-		Handler: r,
-		Addr:    "0.0.0.0:8080",
-	}
-	log.Fatal(srv.ListenAndServe())
+	r := http.NewServeMux()
+	testHandler := http.HandlerFunc(testdocker)
+	userloginHandler := http.HandlerFunc(userlogin)
+	userRegisterHandler := http.HandlerFunc(userreg)
+	r.Handle("/test", middlewares.AuthMiddleware(testHandler))
+	r.Handle("/login", userloginHandler)
+	r.Handle("/register", userRegisterHandler)
+	log.Print("listening on port 8080 ...")
+	err := http.ListenAndServe(":8080", r)
+	log.Fatal(err)
 }
