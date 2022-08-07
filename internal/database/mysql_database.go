@@ -21,7 +21,7 @@ func NewDatabaseHandler(logger *zap.Logger) *databaseHandler {
 }
 
 func (handler *databaseHandler) Databaseconn() (db *sql.DB) {
-	db, err := sql.Open("mysql", "root:M@etroboomin50@tcp(localhost:3306)/kotts")
+	db, err := sql.Open("mysql", "root:M@etroboomin50@tcp(docker.for.mac.localhost:3306)/kotts")
 	if err != nil {
 		handler.logger.Debug("could not connect to the database")
 		return

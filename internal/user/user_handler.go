@@ -2,6 +2,7 @@ package user
 
 import (
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/jim-nnamdi/kotts/internal/database"
@@ -45,9 +46,12 @@ func CompareAndHashPassword(password string, hash []byte) (bool, error) {
 }
 
 func (usermodel *User) UserRegistration(username string, email string, password string, country string, active int) (bool, error) {
+	if conn == nil {
+		fmt.Println("connection could not be established")
+	}
 	res, err := conn.Prepare("insert into users (username,password, country, email, active) values(?,?,?,?,?)")
 	if err != nil {
-		usermodel.Logger.Debug("could not run add user query successfully", zap.Error(err))
+		// usermodel.Logger.Debug("could not run add user query successfully", zap.Error(err))
 		return false, errors.New(err.Error())
 	}
 	hash_user_password, _ := GenerateFromPassword(password, 14)
@@ -61,7 +65,7 @@ func (usermodel *User) UserRegistration(username string, email string, password 
 	}
 	result_from_user_registration, err := res.Exec(username, hash_user_password, country, email, active)
 	if err != nil {
-		usermodel.Logger.Debug("could not execute and insert user into database" + err.Error())
+		// usermodel.Logger.Debug("could not execute and insert user into database" + err.Error())
 		return false, err
 	}
 	check_last_data_inserted, err := result_from_user_registration.RowsAffected()
