@@ -1,6 +1,8 @@
 first_step:
 	docker-compose build
 
+# this happens when you want to update an existing container with the volume for reflection -- docker commit {containerID} {imageID} -- docker run -d -p xxx:xxx --name {cont_name} image:tag --mount source=vol,target={container work_dir} 
+
 second_step:
 	docker run -v $(pwd)/vol/kbe:/app --network kotts_default --name kottsapi -p 8080:8080 -d kotts_api:latest
 
