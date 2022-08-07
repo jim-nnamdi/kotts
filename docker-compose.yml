@@ -7,11 +7,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - api-data:/app/
+      - ./:/app/
     ports:
       - "8080:8080"
 networks:
   default:
-
-volumes:
-  api-data:
