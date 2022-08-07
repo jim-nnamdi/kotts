@@ -4,8 +4,12 @@ WORKDIR /app
 
 ADD . /app/   
 
-RUN CGO_ENABLED=1 GOOS=linux go mod download
+RUN CGO_ENABLED=1 \ 
+    GOOS=linux \
+    go mod download 
+
+RUN go get github.com/githubnemo/CompileDaemon
 
 RUN go build -o main . 
 
-CMD [ "/app/main" ]
+CMD [ "sh", "entrypoint.sh" ]

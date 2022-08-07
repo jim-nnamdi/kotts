@@ -18,7 +18,7 @@ func userlogin(w http.ResponseWriter, r *http.Request) {
 
 func testdocker(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode("Hello world")
+	json.NewEncoder(w).Encode("Hello docker")
 }
 func main() {
 	log.Print("server started running at port 8080 ....")
