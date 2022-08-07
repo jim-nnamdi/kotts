@@ -1,6 +1,8 @@
 package middlewares
 
 import (
+	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
@@ -12,6 +14,26 @@ var (
 	jwt_key = []byte("kotts_secret_key")
 )
 
+func Jwtmiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		c, err := r.Cookie("user_token")
+		if err != nil {
+			if err == http.ErrNoCookie {
+				w.Header().Add("Content-Type", "application/json")
+				w.WriteHeader(http.StatusUnauthorized)
+				json.NewEncoder(w).Encode("Please login into your account!")
+			}
+			w.WriteHeader(http.StatusBadRequest)
+			log.Print(err)
+		}
+		check_expiry_time := time.Now().UTC().GoString() > c.Value
+		if check_expiry_time {
+			w.Header().Add("Content-Type", "application/json")
+			json.NewEncoder(w).Encode("Please login again, token expired..")
+		}
+		next.ServeHTTP(w, r)
+	})
+}
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		c, err := r.Cookie("user_token")

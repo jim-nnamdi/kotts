@@ -1,5 +1,5 @@
 first_step:
-	docker build -t backend .
+	docker-compose build
 
 second_step:
 	docker run  --network kotts_default --name kottsapi -p 8080:8080 -d kotts_api:latest
