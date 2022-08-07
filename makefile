@@ -2,7 +2,7 @@ first_step:
 	docker-compose build
 
 second_step:
-	docker run  --network kotts_default --name kottsapi -p 8080:8080 -d kotts_api:latest
+	docker run -v $(pwd)/vol/kbe:/app --network kotts_default --name kottsapi -p 8080:8080 -d kotts_api:latest
 
 install_SQL:
 	docker run --name mysql -p 3306:3306 -e MYSQL_DATABASE=kotts -e MYSQL_ROOT_PASSWORD=M@etroboomin50 -d mysql:latest

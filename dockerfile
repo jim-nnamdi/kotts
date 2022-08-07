@@ -12,6 +12,8 @@ RUN go mod download golang.org/x/net
 
 RUN go get github.com/githubnemo/CompileDaemon
 
+COPY entrypoint.sh /app/
+
 RUN go build -o main . 
 
 CMD [ "sh", "entrypoint.sh" ]
