@@ -14,8 +14,39 @@ var (
 	jwt_key = []byte("kotts_secret_key")
 )
 
+func BearerMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		get_authorization_token := r.Header.Get("Authorization")
+		if get_authorization_token == "" {
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode("No token found")
+			return
+		}
+
+		token_string := get_authorization_token
+		claims := &user.DataToEncode{}
+		token_gen, err := jwt.ParseWithClaims(token_string, claims, func(t *jwt.Token) (interface{}, error) {
+			return jwt_key, nil
+		})
+		if err != nil {
+			if err == jwt.ErrSignatureInvalid {
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		if !token_gen.Valid {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
 func Jwtmiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
 		c, err := r.Cookie("user_token")
 		if err != nil {
 			if err == http.ErrNoCookie {
@@ -26,10 +57,28 @@ func Jwtmiddleware(next http.Handler) http.Handler {
 			w.WriteHeader(http.StatusBadRequest)
 			log.Print(err)
 		}
-		check_expiry_time := time.Now().UTC().GoString() > c.Value
-		if check_expiry_time {
+		token_string := c.Value
+		claims := &user.DataToEncode{}
+		token_gen, err := jwt.ParseWithClaims(token_string, claims, func(t *jwt.Token) (interface{}, error) {
+			return jwt_key, nil
+		})
+		if err != nil {
+			if err == jwt.ErrSignatureInvalid {
+				w.WriteHeader(http.StatusUnauthorized)
+				w.Header().Add("Content-Type", "application/json")
+				json.NewEncoder(w).Encode("Please login again, token expired..")
+				return
+			}
+			w.WriteHeader(http.StatusBadRequest)
 			w.Header().Add("Content-Type", "application/json")
 			json.NewEncoder(w).Encode("Please login again, token expired..")
+			return
+		}
+		if !token_gen.Valid {
+			w.WriteHeader(http.StatusUnauthorized)
+			w.Header().Add("Content-Type", "application/json")
+			json.NewEncoder(w).Encode("Please login again, token expired..")
+			return
 		}
 		next.ServeHTTP(w, r)
 	})
