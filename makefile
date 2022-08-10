@@ -9,6 +9,9 @@ second_step:
 install_SQL:
 	docker run --name mysql -p 3306:3306 -e MYSQL_DATABASE=kotts -e MYSQL_ROOT_PASSWORD=M@etroboomin50 -d mysql:latest
 
+use_rds:
+	docker run --name mysql -h kott.czve4izeamxt.us-east-2.rds.amazonaws.com -p 3306:3306 -e MYSQL_DATABASE=kottdb -e MYSQL_ROOT_PASSWORD=Metroboomin50 -d mysql:latest
+
 fourth_step:
 	docker exec -it mysql mysql -u root -p -h 0.0.0.0 kotts
 
@@ -24,4 +27,4 @@ check_container_logs:
 cls: 
 	clear
 
-.PHONY: first_step second_step install_SQL fourth_step remove_container remove_image check_container_logs cls
+.PHONY: first_step second_step install_SQL fourth_step remove_container remove_image check_container_logs cls use_rds
