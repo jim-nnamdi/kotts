@@ -1,0 +1,1 @@
+CREATE TABLE chats(id int not null primary key AUTO_INCREMENT, from_user int references users(id), to_user int references users(id), connection_id int references connections(id), created_at datetime, updated_at datetime);
