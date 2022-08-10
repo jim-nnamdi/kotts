@@ -1,0 +1,1 @@
+CREATE TABLE users (id int not null primary key AUTO_INCREMENT, username VARCHAR 191, password text, email text, country text, active text)
