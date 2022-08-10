@@ -1,0 +1,1 @@
+CREATE TABLE courses(id int not null primary key AUTO_INCREMENT, author int references users(id), module1 text, module2 text, module3 text, module4 text, module5 text, created_at datetime, updated_at datetime, total_views bigint);
