@@ -1,0 +1,1 @@
+CREATE TABLE docs(id int not null primary key AUTO_INCREMENT, author int references users(id), content text, created_at datetime, updated_at datetime);

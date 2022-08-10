@@ -1,0 +1,1 @@
+CREATE TABLE transactions(id int not null, from_user int references users(id), to_user int references users(id), amount bigint, tx_fee bigint, tx_status text, created_at datetime, updated_at datetime);

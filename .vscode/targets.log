@@ -7,7 +7,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 
 # This program built for i386-apple-darwin11.3.0
 
-# Make data base, printed on Sat Aug  6 20:47:07 2022
+# Make data base, printed on Wed Aug 10 21:11:24 2022
 
 # Variables
 
@@ -36,21 +36,13 @@ _ = /usr/bin/make
 # makefile (from `makefile', line 1)
 MAKEFILE_LIST :=  makefile
 # environment
-VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
-# environment
 __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 INFOPATH = /opt/homebrew/share/info:
 # environment
 VSCODE_CWD = /Users/mac/Desktop/kotts
 # environment
-GOPROXY = https://proxy.golang.org,direct
-# environment
-PATH = /opt/homebrew/opt/go@1.17/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Users/mac/.cargo/bin
-# environment
-GOPATH = /Users/mac/go
-# environment
-LaunchInstanceID = 4B863810-BABD-4E13-A470-057A35BA5DDC
+PATH = /opt/homebrew/opt/go@1.17/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Users/mac/.cargo/bin:/usr/local/go/bin:/Users/mac/go/bin
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # default
@@ -68,7 +60,7 @@ ORIGINAL_XDG_CURRENT_DESKTOP = undefined
 # environment
 MANPATH = /opt/homebrew/share/man::
 # environment
-GOMODCACHE = /Users/mac/go/pkg/mod
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
 HOME = /Users/mac
 # default
@@ -98,9 +90,9 @@ MAKE_VERSION := 3.81
 # environment
 USER = mac
 # makefile
-.DEFAULT_GOAL := 
+.DEFAULT_GOAL := first_step
 # environment
-TERM_SESSION_ID = 89508935-28F2-4B0E-A1BE-D90DAB96B280
+TERM_SESSION_ID = 50B3D5F4-4115-45AB-99F1-EE1F2D2CF40E
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # default
@@ -126,7 +118,7 @@ MFLAGS = -Rrqp
 # environment
 TERM_PROGRAM_VERSION = 445
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.68351.68357.D7C98DC5-B724-47CF-BE65-2843D7469CC7
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.68351.68357.60821B32-E385-4EE8-9268-BE6D51F83E8B
 # environment
 HOMEBREW_PREFIX = /opt/homebrew
 # automatic
@@ -145,8 +137,6 @@ MAKEFILES :=
 <F = $(notdir $<)
 # environment
 LC_ALL = C
-# environment
-SECURITYSESSIONID = 186ac
 # automatic
 ^F = $(notdir $^)
 # default
@@ -160,7 +150,7 @@ TERM = xterm-256color
 # environment
 VSCODE_PID = 1877
 # variable set hash-table stats:
-# Load=74/1024=7%, Rehash=0, Collisions=2/96=2%
+# Load=69/1024=7%, Rehash=0, Collisions=1/92=1%
 
 # Pattern-specific Variable Values
 
@@ -168,15 +158,33 @@ VSCODE_PID = 1877
 
 # Directories
 
-# . (device 16777233, inode 1444881): 11 files, no impossibilities.
+# . (device 16777233, inode 1444881): 17 files, no impossibilities.
 
-# 11 files, no impossibilities in 1 directories.
+# 17 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
 # No implicit rules.
 
 # Files
+
+remove_image:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `makefile', line 19):
+	docker rmi kotts_api
+	
+
+fourth_step:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `makefile', line 13):
+	docker exec -it mysql mysql -u root -p -h 0.0.0.0 kotts
+	
 
 # Not a target:
 all:
@@ -187,20 +195,52 @@ all:
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
+.PHONY: first_step second_step install_SQL fourth_step remove_container remove_image check_container_logs cls
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
 # Not a target:
 .SUFFIXES:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
+remove_container:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `makefile', line 16):
+	docker rm -f kottsapi
+	
+
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-06 20:46:54
+#  Last modified 2022-08-08 00:11:37
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+first_step:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `makefile', line 2):
+	docker-compose build
+	
+
+second_step:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `makefile', line 7):
+	docker run -v $(pwd)/vol/kbe:/app --network kotts_default --name kottsapi -p 8080:8080 -d kotts_api:latest
+	
 
 # Not a target:
 .DEFAULT:
@@ -208,8 +248,35 @@ makefile:
 #  Modification time never checked.
 #  File has not been updated.
 
+check_container_logs:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `makefile', line 22):
+	docker logs kottsapi
+	
+
+install_SQL:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `makefile', line 10):
+	docker run --name mysql -p 3306:3306 -e MYSQL_DATABASE=kotts -e MYSQL_ROOT_PASSWORD=M@etroboomin50 -d mysql:latest
+	
+
+cls:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `makefile', line 25):
+	clear
+	
+
 # files hash-table stats:
-# Load=4/1024=0%, Rehash=0, Collisions=0/16=0%
+# Load=13/1024=1%, Rehash=0, Collisions=2/33=6%
 # VPATH Search Paths
 
 # No `vpath' search paths.
@@ -221,7 +288,7 @@ makefile:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Sat Aug  6 20:47:07 2022
+# Finished Make data base on Wed Aug 10 21:11:24 2022
 
  
 make: *** No rule to make target `all'.  Stop.
