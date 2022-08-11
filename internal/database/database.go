@@ -30,6 +30,6 @@ func loadConfig(path string) (config runner.Config, err error) {
 		log.Print(err.Error())
 		return runner.Config{}, err
 	}
-	err = viper.Marshal(&config)
+	err = viper.Unmarshal(&config)
 	return
 }
