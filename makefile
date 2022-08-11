@@ -6,9 +6,11 @@ first_step:
 second_step:
 	docker run -v $(pwd)/vol/kbe:/app --network kotts_default --name kottsapi -p 8080:8080 -d kotts_api:latest
 
+# [development_usage]
 install_SQL:
 	docker run --name mysql -p 3306:3306 -e MYSQL_DATABASE=kotts -e MYSQL_ROOT_PASSWORD=M@etroboomin50 -d mysql:latest
 
+# [production_usage]
 use_rds:
 	docker run --name mysql -h kott.czve4izeamxt.us-east-2.rds.amazonaws.com -p 3306:3306 -e MYSQL_DATABASE=kottdb -e MYSQL_ROOT_PASSWORD=Metroboomin50 -d mysql:latest
 
