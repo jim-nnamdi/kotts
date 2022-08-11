@@ -2,7 +2,7 @@ first_step:
 	docker-compose build
 
 second_step:
-	docker run --network kotts_default --name kottsapi -p 8080:8080 -d kotts_api:latest
+	docker run --name kottsapi -p 8080:8080 -d kotts_api:latest
 
 third_step:
 	docker commit kottsapi kotts_api:latest 

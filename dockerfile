@@ -20,4 +20,4 @@ FROM alpine:latest AS production
 
 COPY --from=builder /app . 
 
-CMD [ "sh", "entrypoint.sh" ]
+CMD [ "./main" ]
