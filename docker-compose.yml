@@ -7,6 +7,7 @@ services:
     ports:
     - "3306:3306"
     environment:
+      MYSQL_DRIVER: "mysql"
       MYSQL_HOST: "kott.czve4izeamxt.us-east-2.rds.amazonaws.com"
       MYSQL_DATABASE: "kottdb"
       MYSQL_ROOT_PASSWORD: "Metroboomin50"
