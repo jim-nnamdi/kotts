@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine 
+FROM golang:1.16-alpine AS builder
 
 WORKDIR /app 
 
@@ -15,5 +15,9 @@ RUN go get github.com/githubnemo/CompileDaemon
 COPY entrypoint.sh /app/
 
 RUN go build -o main . 
+
+FROM alpine:latest AS production
+
+COPY --from=builder /app . 
 
 CMD [ "sh", "entrypoint.sh" ]
