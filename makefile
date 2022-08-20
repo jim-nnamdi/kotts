@@ -2,7 +2,7 @@ first_step:
 	docker-compose build
 
 second_step:
-	docker run --network kotts_default --name kottsapi -p 8080:8080 -d kotts_api:latest
+	docker run --name kottsapi -p 8080:8080 -d kotts_api:latest
 
 third_step:
 	docker commit kottsapi kotts_api:latest 
@@ -12,7 +12,7 @@ fourth_step:
 
 # [development_usage]
 install_SQL:
-	docker run --name mysql -p 3306:3306 -e MYSQL_DATABASE=kotts -e MYSQL_ROOT_PASSWORD=M@etroboomin50 -d mysql:latest
+	docker run --name kottdb -p 3306:3306 -h kott.czve4izeamxt.us-east-2.rds.amazonaws.com -e MYSQL_DATABASE=kottdb -e MYSQL_ROOT_PASSWORD=Metroboomin50 -d mysql:8
 
 # [production_usage]
 use_rds:
