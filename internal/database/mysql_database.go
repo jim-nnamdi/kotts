@@ -2,7 +2,7 @@ package database
 
 import (
 	"database/sql"
-	"log"
+	"errors"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jim-nnamdi/kotts/internal/models"
@@ -22,11 +22,14 @@ func NewDatabaseHandler(logger *zap.Logger) *databaseHandler {
 }
 
 func (handler *databaseHandler) Databaseconn() (db *sql.DB) {
-	config, err := loadConfig(".")
-	if err != nil {
-		log.Fatal("cannot load config:", err)
-	}
-	db, err = sql.Open(config.Dbdriver, config.DbSource)
+	// config, err := loadConfig(".")
+	// if err != nil {
+	// 	log.Fatal("cannot load config:", err)
+	// }
+	var (
+		err error
+	)
+	db, err = sql.Open("mysql", "root:M@etroboomin50@tcp(localhost:3306)/kotts")
 	if err != nil {
 		handler.logger.Debug("could not connect to the database")
 		return
@@ -53,7 +56,7 @@ func (handler *databaseHandler) GetUserByUsername(username string) bool {
 	return true
 }
 
-func (handler *databaseHandler) GetUserByEmail(email string) bool {
+func (handler *databaseHandler) GetUserByEmail(email string) (*models.User, error) {
 	var (
 		user_response = &models.User{}
 		err           error
@@ -67,9 +70,9 @@ func (handler *databaseHandler) GetUserByEmail(email string) bool {
 		&user_response.Email,
 		&user_response.Active,
 	); err != nil {
-		return false
+		return user_response, errors.New(err.Error())
 	}
-	return true
+	return user_response, nil
 }
 
 func (handler *databaseHandler) GetByUsernameAndPassword(email string, password string) (*models.User, error) {
