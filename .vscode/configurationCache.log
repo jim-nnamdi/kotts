@@ -1,1 +1,0 @@
-{"buildTargets":["check_container_logs","cls","fifth_step","first_step","fourth_step","install_SQL","make","remove_container","remove_image","second_step","third_step","use_rds"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}
