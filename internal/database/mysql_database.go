@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jim-nnamdi/kotts/internal/models"
@@ -22,11 +21,14 @@ func NewDatabaseHandler(logger *zap.Logger) *databaseHandler {
 }
 
 func (handler *databaseHandler) Databaseconn() (db *sql.DB) {
-	config, err := loadConfig(".")
-	if err != nil {
-		log.Fatal("cannot load config:", err)
-	}
-	db, err = sql.Open(config.Dbdriver, config.DbSource)
+	// config, err := loadConfig(".")
+	// if err != nil {
+	// 	log.Fatal("cannot load config:", err)
+	// }
+	var (
+		err error
+	)
+	db, err = sql.Open("mysql", "root:M@etroboomin50@tcp(localhost:3306)/kotts")
 	if err != nil {
 		handler.logger.Debug("could not connect to the database")
 		return

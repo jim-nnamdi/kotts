@@ -6,11 +6,8 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
- 
-make: *** No rule to make target `all'.  Stop.
 
-
-# Make data base, printed on Sat Aug 20 22:25:53 2022
+# Make data base, printed on Sun Aug 21 21:56:44 2022
 
 # Variables
 
@@ -105,7 +102,7 @@ USER = mac
 # makefile
 .DEFAULT_GOAL := first_step
 # environment
-TERM_SESSION_ID = 73703FEF-2C20-4F28-AED2-D819A0B4EBF6
+TERM_SESSION_ID = AC4E2F9E-EC31-4414-B7D5-F3B095A90417
 # environment
 LESS = -R
 # automatic
@@ -121,7 +118,6 @@ TMPDIR = /var/folders/gt/yllzb0c9007789rkntn8r79w0000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
- 
 VSCODE_IPC_HOOK = /Users/mac/Library/Application Support/Code/1.69.2-main.sock
 # environment
 MallocNanoZone = 0
@@ -134,7 +130,7 @@ MFLAGS = -Rrqp
 # environment
 TERM_PROGRAM_VERSION = 445
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.68351.68357.CF6BC1D9-565D-498D-9D42-7994B3194BFB
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.68351.68357.31863E00-5E9E-4A59-882A-3270E6C65376
 # environment
 HOMEBREW_PREFIX = /opt/homebrew
 # automatic
@@ -236,7 +232,7 @@ remove_container:
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-08-11 09:49:51
+#  Last modified 2022-08-20 22:41:09
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -316,6 +312,9 @@ cls:
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
+ 
+make: *** No rule to make target `all'.  Stop.
+
 #  commands to execute (from `makefile', line 34):
 	clear
 	
@@ -333,6 +332,6 @@ cls:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Sat Aug 20 22:25:53 2022
+# Finished Make data base on Sun Aug 21 21:56:44 2022
 
  
