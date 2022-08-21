@@ -70,8 +70,21 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 		})
 
 		// return user data
-		user_data := db.GetUserByEmail(email)
+		user_data, err := db.GetUserByEmail(email)
+		if err != nil {
+			log.Print(err.Error())
+			return
+		}
+
+		// data to be consumed
+		user_result_data := map[string]interface{}{
+			"token":    token_string,
+			"username": user_data.Username,
+			"email":    user_data.Email,
+			"country":  user_data.Country,
+			"active":   user_data.Active,
+		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(token_string)
+		json.NewEncoder(w).Encode(user_result_data)
 	}
 }
