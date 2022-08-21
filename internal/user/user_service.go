@@ -41,34 +41,37 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 	)
 	parse_form_to_login_user, err := user.UserLogin(email, password)
 	log.Print(parse_form_to_login_user)
-	if !parse_form_to_login_user {
-		log.Print("userservice : error logging in")
-		return
-	}
+
 	if err != nil {
-		log.Printf("login unsuccessful: %s", err)
-		return
+		if !parse_form_to_login_user {
+			log.Print("userservice : error logging in")
+			return
+		}
+	} else {
+		expiration_date := time.Now().Add(60 * time.Minute)
+		parse_encoding_data := DataToEncode{
+			Password: password,
+			Email:    email,
+			StandardClaims: jwt.StandardClaims{
+				ExpiresAt: expiration_date.Unix(),
+				IssuedAt:  time.Now().Unix(),
+			},
+		}
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, parse_encoding_data)
+		token_string, err := token.SignedString(jwt_secret_key)
+		if err != nil {
+			log.Print(err.Error())
+			return
+		}
+		http.SetCookie(w, &http.Cookie{
+			Name:    "user_token",
+			Value:   token_string,
+			Expires: expiration_date,
+		})
+
+		// return user data
+		user_data := db.GetUserByEmail(email)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(token_string)
 	}
-	expiration_date := time.Now().Add(60 * time.Minute)
-	parse_encoding_data := DataToEncode{
-		Password: password,
-		Email:    email,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expiration_date.Unix(),
-			IssuedAt:  time.Now().Unix(),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, parse_encoding_data)
-	token_string, err := token.SignedString(jwt_secret_key)
-	if err != nil {
-		log.Print(err.Error())
-		return
-	}
-	http.SetCookie(w, &http.Cookie{
-		Name:    "user_token",
-		Value:   token_string,
-		Expires: expiration_date,
-	})
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(token_string)
 }

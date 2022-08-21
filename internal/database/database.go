@@ -14,7 +14,7 @@ type Client interface {
 	io.Closer
 	Databaseconn() (db *sql.DB)
 	GetUserByUsername(username string) bool
-	GetUserByEmail(email string) bool
+	GetUserByEmail(email string) (models.User, error)
 	GetUserHash(email string) []byte
 	GetByUsernameAndPassword(email string, password string) (*models.User, error)
 }
