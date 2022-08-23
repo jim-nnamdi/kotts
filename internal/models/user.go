@@ -10,7 +10,14 @@ type User struct {
 	Country     string `json:"country"`
 	Active      int    `json:"active"`
 	BankDetails *Bank  `json:"bank_details"`
+	KYC         *KYC   `json:"kyc"`
 	Logger      *zap.Logger
+}
+
+type KYC struct {
+	ID          int    `json:"id"`
+	Phone       string `json:"phone,omitempty"`
+	HomeAddress string `json:"home_address,omitempty"`
 }
 
 type Bank struct {

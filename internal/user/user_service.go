@@ -89,6 +89,10 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 				"bank_name":      user_data.BankDetails.BankName,
 				"bvn":            user_data.BankDetails.BVN,
 			},
+			"kyc": map[string]interface{}{
+				"phone":   user_data.KYC.Phone,
+				"address": user_data.KYC.HomeAddress,
+			},
 		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(user_result_data)
