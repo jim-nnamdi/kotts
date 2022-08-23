@@ -78,11 +78,17 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 
 		// data to be consumed
 		user_result_data := map[string]interface{}{
-			"token":    token_string,
-			"username": user_data.Username,
-			"email":    user_data.Email,
-			"country":  user_data.Country,
-			"active":   user_data.Active,
+			"token":   token_string,
+			"name":    user_data.Username,
+			"email":   user_data.Email,
+			"country": user_data.Country,
+			"active":  user_data.Active,
+			"bank_details": map[string]interface{}{
+				"account_name":   user_data.BankDetails.AccountName,
+				"account_number": user_data.BankDetails.AccountNumber,
+				"bank_name":      user_data.BankDetails.BankName,
+				"bvn":            user_data.BankDetails.BVN,
+			},
 		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(user_result_data)
