@@ -77,24 +77,50 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// data to be consumed
-		user_result_data := map[string]interface{}{
-			"token":   token_string,
-			"name":    user_data.Username,
-			"email":   user_data.Email,
-			"country": user_data.Country,
-			"active":  user_data.Active,
-			"bank_details": map[string]interface{}{
-				"account_name":   user_data.BankDetails.AccountName,
-				"account_number": user_data.BankDetails.AccountNumber,
-				"bank_name":      user_data.BankDetails.BankName,
-				"bvn":            user_data.BankDetails.BVN,
-			},
-			"kyc": map[string]interface{}{
-				"phone":   user_data.KYC.Phone,
-				"address": user_data.KYC.HomeAddress,
-			},
+		if user_data.BankDetails == nil && user_data.KYC == nil || user_data.BankDetails == nil || user_data.KYC == nil {
+			user_result_data := map[string]interface{}{
+				"personal_data": map[string]interface{}{
+					"token":   token_string,
+					"name":    user_data.Username,
+					"email":   user_data.Email,
+					"country": user_data.Country,
+					"active":  user_data.Active,
+				},
+				"bank_details": map[string]interface{}{
+					"account_name":   "",
+					"account_number": "",
+					"bank_name":      "",
+					"bvn":            "",
+				},
+				"kyc": map[string]interface{}{
+					"phone":   "",
+					"address": "",
+				},
+			}
+
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(user_result_data)
+		} else {
+			user_result_data := map[string]interface{}{
+				"token":   token_string,
+				"name":    user_data.Username,
+				"email":   user_data.Email,
+				"country": user_data.Country,
+				"active":  user_data.Active,
+				"bank_details": map[string]interface{}{
+					"account_name":   user_data.BankDetails.AccountName,
+					"account_number": user_data.BankDetails.AccountNumber,
+					"bank_name":      user_data.BankDetails.BankName,
+					"bvn":            user_data.BankDetails.BVN,
+				},
+				"kyc": map[string]interface{}{
+					"phone":   user_data.KYC.Phone,
+					"address": user_data.KYC.HomeAddress,
+				},
+			}
+
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(user_result_data)
 		}
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(user_result_data)
 	}
 }
