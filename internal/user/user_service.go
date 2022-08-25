@@ -77,6 +77,7 @@ func LoginService(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// data to be consumed
+		// returned or by mobile app
 		if user_data.BankDetails == nil && user_data.KYC == nil || user_data.BankDetails == nil || user_data.KYC == nil {
 			user_result_data := map[string]interface{}{
 				"personal_data": map[string]interface{}{
