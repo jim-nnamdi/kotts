@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jim-nnamdi/kotts/internal/models"
@@ -111,6 +112,76 @@ func (handler *databaseHandler) GetUserHash(email string) []byte {
 		return nil
 	}
 	return []byte(user_response.Password)
+}
+
+func (handler *databaseHandler) GetAllArticles() (*[]models.Articles, error) {
+	var (
+		err            error
+		articles_slice = make([]models.Articles, 0)
+	)
+
+	all_articles, err := handler.Databaseconn().Query("SELECT * FROM articles where approved = true")
+	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Print("No data returned from the database")
+			return nil, errors.New(err.Error())
+		}
+	}
+
+	for all_articles.Next() {
+		var article models.Articles
+		err := all_articles.Scan(
+			article.Id,
+			article.Title,
+			article.Description,
+			article.Author,
+			article.CreatedAt,
+			article.UpdatedAt,
+			article.Category,
+			article.NoOfViews,
+		)
+		if err != nil {
+			log.Print("could not scan articles details into the database")
+			return nil, errors.New(err.Error())
+		}
+
+		// append value of article to articles slice
+		articles_slice = append(articles_slice, article)
+	}
+	return &articles_slice, nil
+}
+
+func (handler *databaseHandler) GetByAuthor(author string) (*[]models.Articles, error) {
+	var (
+		err           error
+		article_slice = make([]models.Articles, 0)
+	)
+	results, err := handler.Databaseconn().Query("SELECT * FROM articles where author=", author)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			log.Print("could not retrieve authors articles")
+			return nil, errors.New(err.Error())
+		}
+	}
+	for results.Next() {
+		var article models.Articles
+		if err = results.Scan(
+			article.Id,
+			article.Title,
+			article.Description,
+			article.Author,
+			article.CreatedAt,
+			article.UpdatedAt,
+			article.Category,
+			article.NoOfViews,
+		); err != nil {
+			log.Print("could not scan data into database properly")
+			return nil, errors.New(err.Error())
+		}
+		article_slice = append(article_slice, article)
+		log.Print("article slice populated", article_slice)
+	}
+	return &article_slice, nil
 }
 func (handler *databaseHandler) Close() error {
 	return nil

@@ -14,4 +14,10 @@ type Client interface {
 	GetUserByEmail(email string) (*models.User, error)
 	GetUserHash(email string) []byte
 	GetByUsernameAndPassword(email string, password string) (*models.User, error)
+
+	// articles related methods
+
+	GetAllArticles() (*[]models.Articles, error)
+	GetByAuthor(author string) (*[]models.Articles, error)
+	// GetArticleView(ctx context.Context, articleID int) (*models.Articles, error)
 }
