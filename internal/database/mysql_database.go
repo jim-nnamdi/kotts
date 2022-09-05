@@ -183,6 +183,37 @@ func (handler *databaseHandler) GetByAuthor(author string) (*[]models.Articles, 
 	}
 	return &article_slice, nil
 }
+
+func (handler *databaseHandler) GetSingleArticle(articleID int) (*models.Articles, error) {
+	var (
+		single_article = models.Articles{}
+		err            error
+	)
+	result, err := handler.Databaseconn().Query("SELECT * FROM articles where id=?", articleID)
+	if err != nil {
+		log.Print("error fetching article")
+		if err == sql.ErrNoRows {
+			log.Print("No article found with required ID")
+			return nil, errors.New(err.Error())
+		}
+	}
+	for result.Next() {
+		if err = result.Scan(
+			single_article.Id,
+			single_article.Title,
+			single_article.Description,
+			single_article.Author,
+			single_article.CreatedAt,
+			single_article.UpdatedAt,
+			single_article.Category,
+			single_article.NoOfViews,
+		); err != nil {
+			log.Print("error scanning data from database to view")
+			return nil, errors.New(err.Error())
+		}
+	}
+	return &single_article, nil
+}
 func (handler *databaseHandler) Close() error {
 	return nil
 }
