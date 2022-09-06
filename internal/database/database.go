@@ -20,4 +20,7 @@ type Client interface {
 	GetAllArticles() (*[]models.Articles, error)
 	GetByAuthor(author string) (*[]models.Articles, error)
 	GetSingleArticle(articleID int) (*models.Articles, error)
+
+	// insurance related methods
+
 }

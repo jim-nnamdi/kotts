@@ -23,10 +23,6 @@ func NewDatabaseHandler(logger *zap.Logger) *databaseHandler {
 }
 
 func (handler *databaseHandler) Databaseconn() (db *sql.DB) {
-	// config, err := loadConfig(".")
-	// if err != nil {
-	// 	log.Fatal("cannot load config:", err)
-	// }
 	var (
 		err error
 	)
@@ -113,6 +109,8 @@ func (handler *databaseHandler) GetUserHash(email string) []byte {
 	}
 	return []byte(user_response.Password)
 }
+
+// article related SQLs
 
 func (handler *databaseHandler) GetAllArticles() (*[]models.Articles, error) {
 	var (
@@ -214,6 +212,8 @@ func (handler *databaseHandler) GetSingleArticle(articleID int) (*models.Article
 	}
 	return &single_article, nil
 }
+
+// insurance related SQLs
 func (handler *databaseHandler) Close() error {
 	return nil
 }
