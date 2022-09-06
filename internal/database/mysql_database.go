@@ -214,6 +214,7 @@ func (handler *databaseHandler) GetSingleArticle(articleID int) (*models.Article
 }
 
 // insurance related SQLs
+
 func (handler *databaseHandler) Close() error {
 	return nil
 }

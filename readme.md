@@ -1,5 +1,7 @@
-# Kotts bank
-> Bank for minimalists 
+# Kotts insurance
+> Mobile Phones & Digital devices insurances.
 
 # Study
 > Docker & networking
+> filestreams
+> DB engineering
