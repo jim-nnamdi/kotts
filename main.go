@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/jim-nnamdi/kotts/internal/middlewares"
-	"github.com/jim-nnamdi/kotts/internal/user"
+	"github.com/jim-nnamdi/kotts/internal/services/user"
 )
 
 func userreg(w http.ResponseWriter, r *http.Request) {
