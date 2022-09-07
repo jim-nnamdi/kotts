@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/jim-nnamdi/kotts/internal/database"
+	"github.com/jim-nnamdi/kotts/internal/models"
 	"go.uber.org/zap"
 )
 
@@ -48,4 +49,24 @@ func (ins *insurance) NewLaptopInsurance(name string, email string, phonenumber 
 		return false, errors.New(err.Error())
 	}
 	return false, nil
+}
+
+// return all mobile insurance for a user
+func (ins *insurance) AllMobilePhoneInsuranceApplications(email string) (*[]models.MobileInsurance, error) {
+	get_user_mobile_insurance_applications, err := ins.mysqlclient.AllMobilePhoneInsuranceApplications(email)
+	if err != nil {
+		ins.logger.Debug("cannot retrieve user mobile insurance plans", zap.String("error", err.Error()))
+		return nil, errors.New(err.Error())
+	}
+	return get_user_mobile_insurance_applications, nil
+}
+
+// return all mobile insurance for a user
+func (ins *insurance) AllLaptopsInsuranceApplications(email string) (*[]models.LaptopInsurance, error) {
+	get_user_laptop_insurance_applications, err := ins.mysqlclient.AllLaptopsInsuranceApplications(email)
+	if err != nil {
+		ins.logger.Debug("cannot retrieve user mobile insurance plans", zap.String("error", err.Error()))
+		return nil, errors.New(err.Error())
+	}
+	return get_user_laptop_insurance_applications, nil
 }

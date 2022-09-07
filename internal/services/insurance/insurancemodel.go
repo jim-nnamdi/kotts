@@ -1,10 +1,16 @@
 package insurance
 
-import "time"
+import (
+	"time"
+
+	"github.com/jim-nnamdi/kotts/internal/models"
+)
 
 type InsuranceInterface interface {
 	NewMobileInsurance(name string, email string, phonenumber string, nameofphone string, purchasedate string, imeinumber string, model string, color string, description string, paid bool, createdAt time.Time, updatedAt time.Time) (bool, error)
 	NewLaptopInsurance(name string, email string, phonenumber string, nameofphone string, purchasedate string, imeinumber string, model string, color string, description string, paid bool, createdAt time.Time, updatedAt time.Time) (bool, error)
+	AllMobilePhoneInsuranceApplications(email string) (*[]models.MobileInsurance, error)
+	AllLaptopsInsuranceApplications(email string) (*[]models.LaptopInsurance, error)
 }
 
 type MobileInsurance struct {
