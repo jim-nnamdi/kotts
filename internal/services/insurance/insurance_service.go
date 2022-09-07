@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -86,4 +87,32 @@ func AllLaptopInsuranceApplicationService(w http.ResponseWriter, r *http.Request
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Accept", "application/json")
 	json.NewEncoder(w).Encode(return_users_laptopinsurance_applications)
+}
+
+func SingleMobileInsuranceService(w http.ResponseWriter, r *http.Request) {
+	var (
+		insurance = &insurance{}
+	)
+	mob_insurance_id := r.URL.Query().Get("id")
+	m_insurance_id, _ := strconv.Atoi(mob_insurance_id)
+	single_insurance_data, err := insurance.SingleMobileInsurance(m_insurance_id)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	json.NewEncoder(w).Encode(single_insurance_data)
+}
+
+func SingleLaptopInsuranceService(w http.ResponseWriter, r *http.Request) {
+	var (
+		insurance = &insurance{}
+	)
+	lap_insurance_id := r.URL.Query().Get("id")
+	l_insurance_id, _ := strconv.Atoi(lap_insurance_id)
+	single_insurance_data, err := insurance.SingleMobileInsurance(l_insurance_id)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	json.NewEncoder(w).Encode(single_insurance_data)
 }
