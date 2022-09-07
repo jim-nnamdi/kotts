@@ -51,6 +51,39 @@ func NewLaptopInsuranceService(w http.ResponseWriter, r *http.Request) {
 	}
 	if add_new_laptop_insurance {
 		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Accept", "application/json")
 		json.NewEncoder(w).Encode(nameoflaptop + " insurance data added successful!")
 	}
+}
+
+func AllMobileInsuranceApplicationService(w http.ResponseWriter, r *http.Request) {
+	var (
+		email     = r.FormValue("email")
+		insurance = &insurance{}
+	)
+
+	return_users_mobileinsurance_applications, err := insurance.AllMobilePhoneInsuranceApplications(email)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Accept", "application/json")
+	json.NewEncoder(w).Encode(return_users_mobileinsurance_applications)
+}
+
+func AllLaptopInsuranceApplicationService(w http.ResponseWriter, r *http.Request) {
+	var (
+		email     = r.FormValue("email")
+		insurance = &insurance{}
+	)
+
+	return_users_laptopinsurance_applications, err := insurance.AllLaptopsInsuranceApplications(email)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Accept", "application/json")
+	json.NewEncoder(w).Encode(return_users_laptopinsurance_applications)
 }
