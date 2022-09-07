@@ -21,6 +21,7 @@ type Client interface {
 	GetByAuthor(author string) (*[]models.Articles, error)
 	GetSingleArticle(articleID int) (*models.Articles, error)
 
-	// insurance related methods
-
+	// mobile-phone insurance related methods
+	ApplyForMobilePhoneInsurance(name string, email string, phonenumber string, nameofphone string, purchasedate string, imeinumber string, model string, color string, description string) (bool, error)
+	AllMobilePhoneInsuranceApplications() (*[]models.MobileInsurance, error)
 }
