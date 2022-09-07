@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jim-nnamdi/kotts/internal/models"
@@ -214,6 +215,78 @@ func (handler *databaseHandler) GetSingleArticle(articleID int) (*models.Article
 }
 
 // insurance related SQLs
+
+func (handler *databaseHandler) ApplyForMobilePhoneInsurance(name string, email string, phonenumber string, nameofphone string, purchasedate string, imeinumber string, model string, color string, description string, paid bool, createdAt time.Time, updatedAt time.Time) (bool, error) {
+	result, err := handler.Databaseconn().Prepare("insert into mobileinsurance values(?,?,?,?,?,?,?,?,?,?,?,?)")
+	if err != nil {
+		handler.logger.Debug("could not add new insurance data for mobile", zap.String("error", err.Error()))
+		return false, err
+	}
+	data, err := result.Exec(name, email, phonenumber, nameofphone, purchasedate, imeinumber, model, color, description, paid, createdAt, updatedAt)
+	if err != nil {
+		handler.logger.Debug("error populating database", zap.String("error", err.Error()))
+		return false, err
+	}
+	check_success, err := data.LastInsertId()
+	if err != nil || check_success == 0 {
+		handler.logger.Debug("last insert id failed :error populating database", zap.String("error", err.Error()))
+		return false, err
+	}
+	return true, nil
+}
+
+func (handler *databaseHandler) ApplyForLaptopInsurance(name string, email string, phonenumber string, nameofphone string, purchasedate string, imeinumber string, model string, color string, description string, paid bool, createdAt time.Time, updatedAt time.Time) (bool, error) {
+	result, err := handler.Databaseconn().Prepare("insert into laptopinsurance values(?,?,?,?,?,?,?,?,?,?,?,?)")
+	if err != nil {
+		handler.logger.Debug("could not add new insurance data for laptop", zap.String("error", err.Error()))
+		return false, err
+	}
+	data, err := result.Exec(name, email, phonenumber, nameofphone, purchasedate, imeinumber, model, color, description, paid, createdAt, updatedAt)
+	if err != nil {
+		handler.logger.Debug("error populating database", zap.String("error", err.Error()))
+		return false, err
+	}
+	check_success, err := data.LastInsertId()
+	if err != nil || check_success == 0 {
+		handler.logger.Debug("last insert id failed :error populating database", zap.String("error", err.Error()))
+		return false, err
+	}
+	return true, nil
+}
+
+func (handler *databaseHandler) AllMobilePhoneInsuranceApplications(email string) (*[]models.MobileInsurance, error) {
+	var (
+		mobile_insurance_model = &models.MobileInsurance{}
+		mobile_insurance_slice = make([]models.MobileInsurance, 0)
+		err                    error
+	)
+	result, err := handler.Databaseconn().Query("select * from mobileinsurance where `email`=?")
+	if err != nil {
+		handler.logger.Debug("could not select all mobile insurance plans", zap.String("error", err.Error()))
+		return &mobile_insurance_slice, err
+	}
+	for result.Next() {
+		err = result.Scan(
+			&mobile_insurance_model.Id,
+			&mobile_insurance_model.Name,
+			&mobile_insurance_model.Email,
+			&mobile_insurance_model.Phonenumber,
+			&mobile_insurance_model.Nameofphone,
+			&mobile_insurance_model.Purchasedate,
+			&mobile_insurance_model.Imeinumber,
+			&mobile_insurance_model.Model,
+			&mobile_insurance_model.Color,
+			&mobile_insurance_model.Description,
+			&mobile_insurance_model.CreatedAt,
+			&mobile_insurance_model.UpdatedAt,
+		)
+		mobile_insurance_slice = append(mobile_insurance_slice, *mobile_insurance_model)
+	}
+	if result.Err() != nil {
+		return nil, err
+	}
+	return &mobile_insurance_slice, nil
+}
 
 func (handler *databaseHandler) Close() error {
 	return nil

@@ -22,7 +22,7 @@ type Client interface {
 	GetByAuthor(author string) (*[]models.Articles, error)
 	GetSingleArticle(articleID int) (*models.Articles, error)
 
-	// mobile-phone insurance related methods
+	// ----- mobile-phone insurance related methods ----- //
 	ApplyForMobilePhoneInsurance(name string, email string, phonenumber string, nameofphone string, purchasedate string, imeinumber string, model string, color string, description string, paid bool, createdAt time.Time, updatedAt time.Time) (bool, error)
 
 	// retrieve all insurance by user, filter by email
@@ -31,7 +31,7 @@ type Client interface {
 	// single mobile insurance application
 	SingleMobilePhoneInsurance(mobileinsuranceid int) (*models.MobileInsurance, error)
 
-	// laptop insurance related methods
+	// ----- laptop insurance related methods ---- //
 	ApplyForLaptopInsurance(name string, email string, phonenumber string, nameofphone string, purchasedate string, imeinumber string, model string, color string, description string, paid bool, createdAt time.Time, updatedAt time.Time) (bool, error)
 
 	// retrieve all insurance by user, filter by email
