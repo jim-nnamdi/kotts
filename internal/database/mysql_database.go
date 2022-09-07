@@ -288,7 +288,7 @@ func (handler *databaseHandler) AllMobilePhoneInsuranceApplications(email string
 	return &mobile_insurance_slice, nil
 }
 
-func (handler *databaseHandler) AllLaptopInsuranceApplications(email string) (*[]models.LaptopInsurance, error) {
+func (handler *databaseHandler) AllLaptopsInsuranceApplications(email string) (*[]models.LaptopInsurance, error) {
 	var (
 		laptop_insurance_model = &models.LaptopInsurance{}
 		laptop_insurance_slice = make([]models.LaptopInsurance, 0)
@@ -322,6 +322,61 @@ func (handler *databaseHandler) AllLaptopInsuranceApplications(email string) (*[
 	return &laptop_insurance_slice, nil
 }
 
+func (handler *databaseHandler) SingleMobilePhoneInsurance(mobileinsuranceid int) (*models.MobileInsurance, error) {
+	var (
+		mobile_insurance = &models.MobileInsurance{}
+		err              error
+	)
+
+	result := handler.Databaseconn().QueryRow("select * from mobileinsurance where `id`=?", mobileinsuranceid)
+
+	if err = result.Scan(
+		&mobile_insurance.Id,
+		&mobile_insurance.Name,
+		&mobile_insurance.Email,
+		&mobile_insurance.Phonenumber,
+		&mobile_insurance.Nameofphone,
+		&mobile_insurance.Purchasedate,
+		&mobile_insurance.Imeinumber,
+		&mobile_insurance.Model,
+		&mobile_insurance.Color,
+		&mobile_insurance.Description,
+		&mobile_insurance.CreatedAt,
+		&mobile_insurance.UpdatedAt,
+	); err != nil {
+		return nil, err
+	}
+	return mobile_insurance, nil
+}
+
+func (handler *databaseHandler) SingleLaptopInsurance(laptopinsuranceid int) (*models.LaptopInsurance, error) {
+	var (
+		laptop_insurance = &models.LaptopInsurance{}
+		err              error
+	)
+
+	result := handler.Databaseconn().QueryRow("select * from laptopinsurance where `id`=?", laptopinsuranceid)
+
+	if err = result.Scan(
+		&laptop_insurance.Id,
+		&laptop_insurance.Name,
+		&laptop_insurance.Email,
+		&laptop_insurance.Phonenumber,
+		&laptop_insurance.Nameofphone,
+		&laptop_insurance.Purchasedate,
+		&laptop_insurance.Imeinumber,
+		&laptop_insurance.Model,
+		&laptop_insurance.Color,
+		&laptop_insurance.Description,
+		&laptop_insurance.CreatedAt,
+		&laptop_insurance.UpdatedAt,
+	); err != nil {
+		return nil, err
+	}
+	return laptop_insurance, nil
+}
+
+// database specifics
 func (handler *databaseHandler) Close() error {
 	return nil
 }

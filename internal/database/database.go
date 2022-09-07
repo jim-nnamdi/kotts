@@ -38,5 +38,5 @@ type Client interface {
 	AllLaptopsInsuranceApplications(email string) (*[]models.LaptopInsurance, error)
 
 	// single mobile insurance application
-	SingleLaptopInsurance(mobileinsuranceid int) (*models.LaptopInsurance, error)
+	SingleLaptopInsurance(laptopinsuranceid int) (*models.LaptopInsurance, error)
 }
