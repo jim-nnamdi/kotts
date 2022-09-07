@@ -70,3 +70,23 @@ func (ins *insurance) AllLaptopsInsuranceApplications(email string) (*[]models.L
 	}
 	return get_user_laptop_insurance_applications, nil
 }
+
+// return single mobile insurance data
+func (ins *insurance) SingleMobileInsurance(mobileinsuranceid int) (*models.MobileInsurance, error) {
+	check_mobile_insurance_by_id, err := ins.mysqlclient.SingleMobilePhoneInsurance(mobileinsuranceid)
+	if err != nil {
+		ins.logger.Debug("cannot display single page for insurance data", zap.String("error", err.Error()))
+		return nil, errors.New(err.Error())
+	}
+	return check_mobile_insurance_by_id, nil
+}
+
+// return single laptop insurance data
+func (ins *insurance) SingleLaptopInsurance(laptopinsuranceid int) (*models.LaptopInsurance, error) {
+	check_laptop_insurance_by_id, err := ins.mysqlclient.SingleLaptopInsurance(laptopinsuranceid)
+	if err != nil {
+		ins.logger.Debug("cannot display single page for insurance data", zap.String("error", err.Error()))
+		return nil, errors.New(err.Error())
+	}
+	return check_laptop_insurance_by_id, nil
+}

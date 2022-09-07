@@ -11,6 +11,8 @@ type InsuranceInterface interface {
 	NewLaptopInsurance(name string, email string, phonenumber string, nameofphone string, purchasedate string, imeinumber string, model string, color string, description string, paid bool, createdAt time.Time, updatedAt time.Time) (bool, error)
 	AllMobilePhoneInsuranceApplications(email string) (*[]models.MobileInsurance, error)
 	AllLaptopsInsuranceApplications(email string) (*[]models.LaptopInsurance, error)
+	SingleMobileInsurance(mobileinsuranceid int) (*models.MobileInsurance, error)
+	SingleLaptopInsurance(laptopinsuranceid int) (*models.LaptopInsurance, error)
 }
 
 type MobileInsurance struct {
