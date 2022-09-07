@@ -288,6 +288,40 @@ func (handler *databaseHandler) AllMobilePhoneInsuranceApplications(email string
 	return &mobile_insurance_slice, nil
 }
 
+func (handler *databaseHandler) AllLaptopInsuranceApplications(email string) (*[]models.LaptopInsurance, error) {
+	var (
+		laptop_insurance_model = &models.LaptopInsurance{}
+		laptop_insurance_slice = make([]models.LaptopInsurance, 0)
+		err                    error
+	)
+	result, err := handler.Databaseconn().Query("select * from laptopinsurance where `email`=?")
+	if err != nil {
+		handler.logger.Debug("could not select all laptop insurance plans", zap.String("error", err.Error()))
+		return &laptop_insurance_slice, err
+	}
+	for result.Next() {
+		err = result.Scan(
+			&laptop_insurance_model.Id,
+			&laptop_insurance_model.Name,
+			&laptop_insurance_model.Email,
+			&laptop_insurance_model.Phonenumber,
+			&laptop_insurance_model.Nameofphone,
+			&laptop_insurance_model.Purchasedate,
+			&laptop_insurance_model.Imeinumber,
+			&laptop_insurance_model.Model,
+			&laptop_insurance_model.Color,
+			&laptop_insurance_model.Description,
+			&laptop_insurance_model.CreatedAt,
+			&laptop_insurance_model.UpdatedAt,
+		)
+		laptop_insurance_slice = append(laptop_insurance_slice, *laptop_insurance_model)
+	}
+	if result.Err() != nil {
+		return nil, err
+	}
+	return &laptop_insurance_slice, nil
+}
+
 func (handler *databaseHandler) Close() error {
 	return nil
 }
