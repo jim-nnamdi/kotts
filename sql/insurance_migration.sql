@@ -1,1 +1,1 @@
--- sql here for insurance
+-- sql here for insurances
