@@ -1,11 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 
 	"github.com/jim-nnamdi/kotts/internal/middlewares"
+	"github.com/jim-nnamdi/kotts/internal/services/insurance"
 	"github.com/jim-nnamdi/kotts/internal/services/user"
 )
 
@@ -16,19 +16,65 @@ func userlogin(w http.ResponseWriter, r *http.Request) {
 	user.LoginService(w, r)
 }
 
-func testdocker(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode("auth: successfully logged in ...")
+func newMobileInsuranceService(w http.ResponseWriter, r *http.Request) {
+	insurance.NewMobileInsuranceService(w, r)
 }
+
+func newLaptopInsuranceService(w http.ResponseWriter, r *http.Request) {
+	insurance.NewLaptopInsuranceService(w, r)
+}
+
+func allMobileInsuranceApplicationService(w http.ResponseWriter, r *http.Request) {
+	insurance.AllMobileInsuranceApplicationService(w, r)
+}
+
+func allLaptopInsuranceApplicationService(w http.ResponseWriter, r *http.Request) {
+	insurance.AllLaptopInsuranceApplicationService(w, r)
+}
+
+func singleMobileInsuranceService(w http.ResponseWriter, r *http.Request) {
+	insurance.SingleMobileInsuranceService(w, r)
+}
+
+func singleLaptopInsuranceService(w http.ResponseWriter, r *http.Request) {
+	insurance.SingleLaptopInsuranceService(w, r)
+}
+
 func main() {
 	log.Print("server started running at port 8080 ....")
 	r := http.NewServeMux()
-	testHandler := http.HandlerFunc(testdocker)
+
+	// users endpoints
 	userloginHandler := http.HandlerFunc(userlogin)
 	userRegisterHandler := http.HandlerFunc(userreg)
-	r.Handle("/test", middlewares.Jwtmiddleware(middlewares.RecoveryMiddleware(testHandler)))
+
+	// insurance endpoints
+	newMobileInsuranceService := http.HandlerFunc(newMobileInsuranceService)
+	newLaptopInsuranceService := http.HandlerFunc(newLaptopInsuranceService)
+	allMobileInsuranceApplicationService := http.HandlerFunc(allMobileInsuranceApplicationService)
+	allLaptopInsuranceApplicationService := http.HandlerFunc(allLaptopInsuranceApplicationService)
+	singleMobileInsuranceService := http.HandlerFunc(singleMobileInsuranceService)
+	singleLaptopInsuranceService := http.HandlerFunc(singleLaptopInsuranceService)
+
+	// auth handlers
+
 	r.Handle("/login", middlewares.RecoveryMiddleware(userloginHandler))
 	r.Handle("/register", middlewares.RecoveryMiddleware(userRegisterHandler))
+
+	// insurance handlers
+
+	r.Handle("/new-mobile-insurance", middlewares.RecoveryMiddleware(newMobileInsuranceService))
+
+	r.Handle("/new-laptop-insurance", middlewares.RecoveryMiddleware(newLaptopInsuranceService))
+
+	r.Handle("/all-mobile-insurance-applications", middlewares.RecoveryMiddleware(allMobileInsuranceApplicationService))
+
+	r.Handle("/all-laptop-insurance-applications", middlewares.RecoveryMiddleware(allLaptopInsuranceApplicationService))
+
+	r.Handle("/mobile-insurance", middlewares.RecoveryMiddleware(singleMobileInsuranceService))
+
+	r.Handle("/laptop-insurance", middlewares.RecoveryMiddleware(singleLaptopInsuranceService))
+
 	log.Print("listening on port 8080 ...")
 	err := http.ListenAndServe(":8080", r)
 	log.Fatal(err)
