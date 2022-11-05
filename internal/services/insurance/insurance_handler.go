@@ -2,6 +2,7 @@ package insurance
 
 import (
 	"errors"
+	"log"
 	"time"
 
 	"github.com/jim-nnamdi/kotts/internal/database"
@@ -58,7 +59,11 @@ func (ins *insurance) AllMobilePhoneInsuranceApplications(email string) (*[]mode
 		ins.logger.Debug("cannot retrieve user mobile insurance plans", zap.String("error", err.Error()))
 		return nil, errors.New(err.Error())
 	}
-	return get_user_mobile_insurance_applications, nil
+	log.Print("got here")
+	if get_user_mobile_insurance_applications != nil {
+		return get_user_mobile_insurance_applications, nil
+	}
+	return nil, errors.New("no mobile phone insurance application for user")
 }
 
 // return all mobile insurance for a user

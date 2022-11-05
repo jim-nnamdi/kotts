@@ -1,7 +1,2 @@
 # Kotts insurance
-> Mobile Phones & Digital devices insurances.
-
-# Study
-> Docker & networking
-> filestreams
-> DB engineering
+> An opensource project aimed at building a minimalistic insurance system in GO

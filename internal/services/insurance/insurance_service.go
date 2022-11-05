@@ -65,12 +65,15 @@ func AllMobileInsuranceApplicationService(w http.ResponseWriter, r *http.Request
 
 	return_users_mobileinsurance_applications, err := insurance.AllMobilePhoneInsuranceApplications(email)
 	if err != nil {
-		log.Print(err)
+		log.Print(err.Error())
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Accept", "application/json")
-	json.NewEncoder(w).Encode(return_users_mobileinsurance_applications)
+	if return_users_mobileinsurance_applications != nil {
+		log.Print("got here")
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Accept", "application/json")
+		json.NewEncoder(w).Encode(return_users_mobileinsurance_applications)
+	}
 }
 
 func AllLaptopInsuranceApplicationService(w http.ResponseWriter, r *http.Request) {

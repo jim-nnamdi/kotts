@@ -256,7 +256,7 @@ func (handler *databaseHandler) ApplyForLaptopInsurance(name string, email strin
 
 func (handler *databaseHandler) AllMobilePhoneInsuranceApplications(email string) (*[]models.MobileInsurance, error) {
 	var (
-		mobile_insurance_model = &models.MobileInsurance{}
+		mobile_insurance_model = models.MobileInsurance{}
 		mobile_insurance_slice = make([]models.MobileInsurance, 0)
 		err                    error
 	)
@@ -266,6 +266,7 @@ func (handler *databaseHandler) AllMobilePhoneInsuranceApplications(email string
 		return &mobile_insurance_slice, err
 	}
 	for result.Next() {
+		log.Print("got here")
 		err = result.Scan(
 			&mobile_insurance_model.Id,
 			&mobile_insurance_model.Name,
@@ -280,7 +281,7 @@ func (handler *databaseHandler) AllMobilePhoneInsuranceApplications(email string
 			&mobile_insurance_model.CreatedAt,
 			&mobile_insurance_model.UpdatedAt,
 		)
-		mobile_insurance_slice = append(mobile_insurance_slice, *mobile_insurance_model)
+		mobile_insurance_slice = append(mobile_insurance_slice, mobile_insurance_model)
 	}
 	if result.Err() != nil {
 		return nil, err
