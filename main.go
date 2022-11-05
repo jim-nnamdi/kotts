@@ -9,6 +9,13 @@ import (
 	"github.com/jim-nnamdi/kotts/internal/services/user"
 )
 
+// serves as an entrypoint & display msg onload
+func entrypoint(w http.ResponseWriter, r *http.Request) {
+	log.Print("connection opened for entrypoint ...")
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte("Hello kotts"))
+}
+
 func userreg(w http.ResponseWriter, r *http.Request) {
 	user.RegistrationService(w, r)
 }
@@ -44,6 +51,9 @@ func main() {
 	log.Print("server started running at port 8080 ....")
 	r := http.NewServeMux()
 
+	// entrypoint
+	epserve := http.HandlerFunc(entrypoint)
+
 	// users endpoints
 	userloginHandler := http.HandlerFunc(userlogin)
 	userRegisterHandler := http.HandlerFunc(userreg)
@@ -58,6 +68,7 @@ func main() {
 
 	// auth handlers
 
+	r.Handle("/", middlewares.Jwtmiddleware(epserve))
 	r.Handle("/login", middlewares.RecoveryMiddleware(userloginHandler))
 	r.Handle("/register", middlewares.RecoveryMiddleware(userRegisterHandler))
 

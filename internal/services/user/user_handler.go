@@ -46,7 +46,11 @@ func CompareAndHashPassword(password string, hash []byte) (bool, error) {
 }
 
 func (usermodel *User) UserRegistration(username string, email string, password string, country string, active int) (bool, error) {
-	if conn == nil {
+
+	var (
+		dbc = db.Databaseconn()
+	)
+	if dbc == nil {
 		fmt.Println("connection could not be established")
 	}
 	res, err := conn.Prepare("insert into users (username,password, country, email, active) values(?,?,?,?,?)")
@@ -56,25 +60,25 @@ func (usermodel *User) UserRegistration(username string, email string, password 
 	}
 	hash_user_password, _ := GenerateFromPassword(password, 14)
 	check_if_username_exists := db.GetUserByUsername(username)
-	check_if_email_exists, err := db.GetUserByEmail(email)
-	if err != nil {
-		log.Print(err)
-		return false, errors.New(err.Error())
+	check_if_email_exists, _ := db.GetUserByEmail(email)
+
+	if check_if_email_exists.Email != "" {
+		return false, errors.New("email should not exist")
 	}
+
 	if check_if_username_exists {
 		return false, errors.New("user with username already exists")
 	}
-	if check_if_email_exists.ID != 0 {
-		return false, errors.New("user with email already exists")
-	}
+
 	result_from_user_registration, err := res.Exec(username, hash_user_password, country, email, active)
 	if err != nil {
 		// usermodel.Logger.Debug("could not execute and insert user into database" + err.Error())
-		return false, err
+		return false, errors.New("could not register user")
 	}
 	check_last_data_inserted, err := result_from_user_registration.RowsAffected()
 	if check_last_data_inserted == 0 || check_last_data_inserted < 0 {
-		return false, err
+		log.Print(err.Error())
+		return false, errors.New("error inserting result to db")
 	}
 	return true, nil
 }

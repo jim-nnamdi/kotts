@@ -33,8 +33,6 @@ func BearerMiddleware(next http.Handler) http.Handler {
 				w.WriteHeader(http.StatusUnauthorized)
 				return
 			}
-			w.WriteHeader(http.StatusBadRequest)
-			return
 		}
 		if !token_gen.Valid {
 			w.WriteHeader(http.StatusUnauthorized)
